@@ -23,10 +23,10 @@ def start_game():
 	print("'S' or 's' : Move Down")
 	print("'A' or 'a' : Move Left")
 	print("'D' or 'd' : Move Right")
-
 	# calling the function to add
 	# a new 2 in grid after every step
 	add_new_2(mat)
+	print_grid(mat)
 	return mat
 
 # function to add a new 2 in
@@ -36,18 +36,20 @@ def add_new_2(mat):
 # choosing a random index for
 # row and column.
 	r = random.randint(0, 3)
+	print(r)
 	c = random.randint(0, 3)
+	print(c)
 
 	# while loop will break as the
 	# random cell chosen will be empty
 	# (or contains zero)
-	while(mat[r] != 0):
+	while(mat[r][c] != 0):
 		r = random.randint(0, 3)
 		c = random.randint(0, 3)
 
 	# we will place a 2 at that empty
 	# random cell.
-	mat[r] = 2
+	mat[r][c] = 2
 
 # function to get the current
 # state of game
@@ -253,3 +255,7 @@ def move_down(grid):
 # this file only contains all the logic
 # functions to be called in main function
 # present in the other file
+
+def print_grid(grid):
+	for i in range(len(grid)):
+		print(grid[i])
