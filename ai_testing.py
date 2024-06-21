@@ -1,6 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
-
 #input layer needs to be 16 inputs for each of the squares, the output layer needs to result in 4 outputs
 #lets use like 4 for each of the input layers to begin with and then 
 def init_params(layer_dims):
@@ -29,11 +27,13 @@ def forward_prop(X, params):
     A = X # input to first layer i.e. training data or in our case, the numbers on board (I think)
     caches = []
     L = len(params)//2
+    Z = []
     for l in range(1, L+1):
         A_prev = A
         
         # Linear Hypothesis i.e, the function that takes the previous nodes and inputs their values to each of the subsequent nodes
         Z = np.dot(params['W'+str(l)], A_prev) + params['b'+str(l)] 
+        
         
         # Storing the linear cache
         linear_cache = (A_prev, params['W'+str(l)], params['b'+str(l)]) 
@@ -44,13 +44,12 @@ def forward_prop(X, params):
          # storing the both linear and activation cache
         cache = (linear_cache, activation_cache)
         caches.append(cache)
-    
     return A, caches
 
 def cost_function(A, Y):
     m = Y.shape[1]
     
-    cost = (-1/m)*(np.dot(np.log(A), Y.T) + np.dot(log(1-A), 1-Y.T)) 
+    cost = (-1/m)*(np.dot(np.log(A), Y.T) + np.dot(np.log(1-A), 1-Y.T)) 
     
     return cost
 
@@ -113,3 +112,10 @@ def train(X, Y, layer_dims, epochs, lr):
         
         
     return params, cost_history
+
+def flatten(list):
+    new_list = []
+    for i in range(len(list)):
+        for j in range(len(list[i])):
+            new_list.append([list[i][j]])
+    return new_list

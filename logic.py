@@ -31,25 +31,39 @@ def start_game():
 
 # function to add a new 2 in
 # grid at any random empty cell
+def empty_exists(mat):
+	for i in range(4):
+		for j in range(4):
+			if(mat[i][j]== 0):
+				return True
+	return False
+
 def add_new_2(mat):
-
-# choosing a random index for
-# row and column.
-	r = random.randint(0, 3)
-	print(r)
-	c = random.randint(0, 3)
-	print(c)
-
-	# while loop will break as the
-	# random cell chosen will be empty
-	# (or contains zero)
-	while(mat[r][c] != 0):
+	if empty_exists(mat):
+	# choosing a random index for
+	# row and column.
 		r = random.randint(0, 3)
+		print(r)
 		c = random.randint(0, 3)
+		print(c)
 
-	# we will place a 2 at that empty
-	# random cell.
-	mat[r][c] = 2
+		# while loop will break as the
+		# random cell chosen will be empty
+		# (or contains zero)
+		while(mat[r][c] != 0):
+			r = random.randint(0, 3)
+			c = random.randint(0, 3)
+
+		# we will place a 2 at that empty
+		# random cell.
+		mat[r][c] = 2
+
+def empty_exists(mat):
+	for i in range(4):
+		for j in range(4):
+			if(mat[i][j]== 0):
+				return True
+	return False
 
 # function to get the current
 # state of game
