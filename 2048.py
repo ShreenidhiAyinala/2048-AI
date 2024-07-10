@@ -13,8 +13,12 @@ def test_one(output):
 	params = ai_testing.init_params([16,8,4])
 	cost_history = []
 
-# calling start_game function
-# to initialize the matrix
+	# modifications with cost function
+	num_moves = 0  
+	highest_tile = 0 
+	
+	# calling start_game function
+	# to initialize the matrix
 	mat = logic.start_game()
 	status = logic.get_current_state(mat)
 	while(status != 'LOST'):
@@ -72,12 +76,22 @@ def test_one(output):
 			else:
 				print("Invalid Key Pressed")
 			curr = curr - 1
-
+		
+		num_moves += 1
+		highest_tile = max(max(row) for row in mat)
+	
 		# print the matrix after each
 		# move.
 		logic.print_grid(mat)
 	print("GAME OVER")
-	output.put((params, 30))
+
+	# modifications
+	final_score = sum(sum(row) for row in mat)
+	game_cost = ai_testing.cost_function(final_score, num_moves, highest_tile)
+	output.put((params, game_cost)) 
+	# output.put((params, 30))
+
+	
 
 if __name__ == '__main__':
 	processes = []
@@ -95,7 +109,17 @@ if __name__ == '__main__':
 	results = []
 	for p in processes:
 		print('once')
-		results.append(output.get())
+		# modified
+		params, cost = output.get()
+		results.append((params, cost))
+		# results.append(output.get())
+	
+	# sorting results by cost, goal to minimize the negative of the desired maximum
+	results.sort(key=lambda x: x[1])
 
-	print(results)
+	best_params = results[0][0]
+	print("Best parameters:", best_params)
+	print("Best cost:", results[0][1])
+
+	# print(results)
 	print('Finished')

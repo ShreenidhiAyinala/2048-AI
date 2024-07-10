@@ -119,3 +119,14 @@ def flatten(list):
         for j in range(len(list[i])):
             new_list.append([list[i][j]])
     return new_list
+
+def cost_function(final_score, num_moves, highest_tile):
+    # adjust weights as needed
+    score_weight = 1.0
+    moves_weight = 0.01
+    tile_weight = 100.0
+    
+    cost = (score_weight * final_score) + (moves_weight * num_moves) + (tile_weight * highest_tile)
+
+    # returning negative to minimize
+    return -cost
