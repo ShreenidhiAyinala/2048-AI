@@ -39,7 +39,7 @@ def empty_exists(mat):
 				return True
 	return False
 
-def add_new_2(mat, curr, lock):
+def add_new_2(mat):
 	if empty_exists(mat):
 	# choosing a random index for
 	# row and column.

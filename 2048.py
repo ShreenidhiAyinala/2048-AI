@@ -99,7 +99,6 @@ def test_one(output, params):
 		# move.
 		"""logic.print_grid(mat)"""
 	#print("GAME OVER")
-	final_mats.append(mat)
 
 
 	# modifications
@@ -157,7 +156,6 @@ if __name__ == '__main__':
 
 		best_params, secondbest_params, results = eval_params(processes)
 		print(results)
-		ct = ct + 1
 	
 	print(best_params)
 	
