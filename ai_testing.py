@@ -1,8 +1,9 @@
 import numpy as np
+import copy
 #input layer needs to be 16 inputs for each of the squares, the output layer needs to result in 4 outputs
 #lets use like 4 for each of the input layers to begin with and then 
 def init_params(layer_dims):
-    np.random.seed(3)
+    np.random.seed()
     params = {}
     L = len(layer_dims) #how many hidden layers there are
     
@@ -130,3 +131,22 @@ def cost_function(final_score, num_moves, highest_tile):
 
     # returning negative to minimize
     return -cost
+def crossover(parent1, parent2, length):
+    child1 = copy.deepcopy(parent1)
+    child2 = copy.deepcopy(parent2)
+    for l in range(1, length//2 + 1):
+        child1['W'+str(l)] = copy.deepcopy(parent2['W'+str(l)])
+        child1['b'+str(l)] = copy.deepcopy(parent2['b'+str(l)])
+        child2['W'+str(l)] = copy.deepcopy(parent1['W'+str(l)])
+        child2['b'+str(l)] = copy.deepcopy(parent1['b'+str(l)])   
+    return child1, child2
+
+
+def mutate(mutator):
+    mutation_factor = 0.1
+    for key in mutator:
+        for chromo in range(len(mutator[key])):
+            for chromo2 in range(len(mutator[key][chromo])):
+                if np.random.uniform(0, 1.0) < mutation_factor:
+                    mutator[key][chromo][chromo2] = (np.random.randn()*0.01)
+    return mutator
