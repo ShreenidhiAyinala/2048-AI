@@ -8,6 +8,7 @@ import random
 
 # function to initialize game / grid
 # at the start
+directions = []
 def start_game():
 
 	# declaring an empty list then
@@ -18,7 +19,7 @@ def start_game():
 		mat.append([0] * 4)
 
 	# printing controls for user
-	print("Commands are as follows : ")
+	"""print("Commands are as follows : ")
 	print("'W' or 'w' : Move Up")
 	print("'S' or 's' : Move Down")
 	print("'A' or 'a' : Move Left")
@@ -26,7 +27,7 @@ def start_game():
 	# calling the function to add
 	# a new 2 in grid after every step
 	add_new_2(mat)
-	print_grid(mat)
+	print_grid(mat)"""
 	return mat
 
 # function to add a new 2 in
@@ -43,9 +44,7 @@ def add_new_2(mat):
 	# choosing a random index for
 	# row and column.
 		r = random.randint(0, 3)
-		print(r)
 		c = random.randint(0, 3)
-		print(c)
 
 		# while loop will break as the
 		# random cell chosen will be empty

@@ -9,8 +9,23 @@ import multiprocessing as mp
 
 # Driver code
 output = mp.Queue()
-def test_one(output):
-	params = ai_testing.init_params([16,8,4])
+final_mats = []
+def init_test():
+	processes = []
+	for i in range(10):
+		params = ai_testing.init_params([16,8,4])
+		processes.append(mp.Process(target=test_one, args=(output, ai_testing.copy.deepcopy(params))))
+
+	for p in processes:
+		p.start()
+
+# Exit the completed processes
+	for p in processes:
+		p.join()
+
+	return processes
+
+def test_one(output, params):
 	cost_history = []
 
 	# modifications with cost function
@@ -37,7 +52,7 @@ def test_one(output):
 
 				# get the current state and print it
 				status = logic.get_current_state(mat)
-				print(status)
+				# print(status)
 
 				# if game not over then continue
 				# and add a new two
@@ -54,7 +69,7 @@ def test_one(output):
 			elif(new_sols[curr] == sols[1]):
 				mat, flag = logic.move_down(mat)
 				status = logic.get_current_state(mat)
-				print(status)
+				#print(status)
 				if(status == 'GAME NOT OVER'):
 					logic.add_new_2(mat)
 
@@ -62,7 +77,7 @@ def test_one(output):
 			elif(new_sols[curr] == sols[2]):
 				mat, flag = logic.move_left(mat)
 				status = logic.get_current_state(mat)
-				print(status)
+				#print(status)
 				if(status == 'GAME NOT OVER'):
 					logic.add_new_2(mat)
 
@@ -70,7 +85,7 @@ def test_one(output):
 			elif(new_sols[curr] == sols[3]):
 				mat, flag = logic.move_right(mat)
 				status = logic.get_current_state(mat)
-				print(status)
+				#print(status)
 				if(status == 'GAME NOT OVER'):
 					logic.add_new_2(mat)
 			else:
@@ -82,8 +97,9 @@ def test_one(output):
 	
 		# print the matrix after each
 		# move.
-		logic.print_grid(mat)
-	print("GAME OVER")
+		"""logic.print_grid(mat)"""
+	#print("GAME OVER")
+
 
 	# modifications
 	final_score = sum(sum(row) for row in mat)
@@ -91,24 +107,9 @@ def test_one(output):
 	output.put((params, game_cost)) 
 	# output.put((params, 30))
 
-	
-
-if __name__ == '__main__':
-	processes = []
-	for i in range(10):
-		processes.append(mp.Process(target=test_one, args=(output,)))
-
-	for p in processes:
-		p.start()
-
-# Exit the completed processes
-	for p in processes:
-		p.join()
-
-	print('finished1')
+def eval_params(processes):
 	results = []
 	for p in processes:
-		print('once')
 		# modified
 		params, cost = output.get()
 		results.append((params, cost))
@@ -118,8 +119,45 @@ if __name__ == '__main__':
 	results.sort(key=lambda x: x[1])
 
 	best_params = results[0][0]
+	secondbest_params = results[1][0]
 	print("Best parameters:", best_params)
 	print("Best cost:", results[0][1])
 
+	#print("Second Best parameters:", secondbest_params)
+	#print("Second Best cost:", results[1][1])
+
+	return best_params, secondbest_params, results[0][1]
+
+def next_gen(parent1, parent2):
+	child1, child2 = ai_testing.crossover(parent1, parent2, 2)
+	parameters = [parent1, parent2, child1, child2]
+	for index in range(0, 6):
+		for four in range(0, 3):
+			parameters.append(ai_testing.mutate(ai_testing.copy.deepcopy(parameters[four])))
+	
+	return parameters
+
+if __name__ == '__main__':
+	best_params, secondbest_params, results = eval_params(init_test())
+	ct = 0
+	while results > -2048 * 100:
+		param_list = next_gen(best_params, secondbest_params)
+		processes = []
+		for i in range(len(param_list)):
+			params = param_list[i]
+			processes.append(mp.Process(target=test_one, args=(output, params)))
+
+		for p in processes:
+			p.start()
+
+	# Exit the completed processes
+		for p in processes:
+			p.join()
+
+		best_params, secondbest_params, results = eval_params(processes)
+		print(results)
+	
+	print(best_params)
+	
+	
 	# print(results)
-	print('Finished')
